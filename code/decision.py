@@ -12,13 +12,17 @@ def steer_and_throttle(Rover):
     # For the rover to steer and throttle as set below.
     Rover.throttle = Rover.throttle_set
     Rover.brake = 0
-    Rover.steer = np.clip(np.mean(Rover.nav_angles * 180/np.pi), -15, 15)
+    Rover.steer = np.clip(np.mean(Rover.nav_angles * 180/np.pi) -18, -15, 15)
+    # The offset is to make the mean shift more towards the right of the rover(negative)
+    #to crawl along the right wall.
 
 def only_steer_no_throttle(Rover):
     # For the rover to coast (no throttle) and steer only when max vel has been reached.
     Rover.throttle = 0
     Rover.brake = 0
-    Rover.steer = np.clip(np.mean(Rover.nav_angles * 180/np.pi), -15, 15)
+    Rover.steer = np.clip(np.mean(Rover.nav_angles * 180/np.pi) -18, -15, 15)
+    # The offset is to make the mean shift more towards the right of the rover(negative)
+    #to crawl along the right wall.
 
 def no_steer_only_throttle(Rover):
     # For when the rover is in reverse.
@@ -38,7 +42,7 @@ def turn(Rover):
     # Release the brake to allow turning
     Rover.brake = 0
     # Turn range is +/- 15 degrees, when stopped the next line will induce 4-wheel turning
-    Rover.steer = -15 # Could be more clever here about which way to turn
+    Rover.steer = 15 # Could be more clever here about which way to turn
 
 def unstuck(Rover):
     global stuck_cycles
