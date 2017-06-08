@@ -132,9 +132,9 @@ def perception_step(Rover):
     nav_x, nav_y = rover_coords(nav_path_img)
 
     # 6) Convert rover-centric pixel values to world coordinates
-    xpos = Rover.xpos[Rover.count]
-    ypos = Rover.ypos[Rover.count]
-    yaw = Rover.yaw[Rover.count]
+    xpos = Rover.pos[0]
+    ypos = Rover.pos[1]
+    yaw = Rover.yaw
     world_size = Rover.worldmap.shape[0]
     scale = 10
 
