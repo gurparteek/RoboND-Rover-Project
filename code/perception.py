@@ -3,7 +3,7 @@ import cv2
 
 #Identifying the navigable terrain.
 #Threshold of RGB > 160 does a nice job of identifying the ground pixels.
-def find_nav_path(img, thresh = [160,160,160]):
+def find_nav_path(img, thresh = [150,150,150]):
     # Create an array of zeros same xy size as img, but single channel
     masked_img = np.zeros_like(img[:,:,0])
     #Creating a mask for assigning 1 or True, to the pixels that satisfy all three thresholds.
@@ -122,9 +122,9 @@ def perception_step(Rover):
         # Example: Rover.vision_image[:,:,0] = obstacle color-thresholded binary image
         #          Rover.vision_image[:,:,1] = rock_sample color-thresholded binary image
         #          Rover.vision_image[:,:,2] = navigable terrain color-thresholded binary image
-    Rover.vision_image[:,:,0] = obstacles_img
-    Rover.vision_image[:,:,1] = rocks_img
-    Rover.vision_image[:,:,2] = nav_path_img
+    Rover.vision_image[:,:,0] = obstacles_img*255
+    Rover.vision_image[:,:,1] = rocks_img*255
+    Rover.vision_image[:,:,2] = nav_path_img*255
 
     # 5) Convert map image pixel values to rover-centric coords
     obstacle_x, obstacle_y = rover_coords(obstacles_img)
