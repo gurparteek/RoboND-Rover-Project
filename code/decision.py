@@ -22,21 +22,29 @@ def decision_step(Rover):
                 # and velocity is below max, then throttle 
                 if Rover.vel < Rover.max_vel:
                     #Setting condition for when the Rover gets stuck.
-                    #Meaning the throttle is there but there is no velocity.
-                    #The steer would be the same to re-trace the same path.
                     if -0.1 < Rover.vel < 0.1 and Rover.throttle == 0.2:
+                        #Incrementing stuck_cycle counts.
                         stuck_cycles = stuck_cycles + 1
-                        if stuck_cycles > 20:
+                        #If it has been stuck for over 50 cycles.
+                        if stuck_cycles > 50:
                             initial = time.clock()
-                            while time.clock() < initial + 1:
-                                Rover.throttle = -1.0
+                            #Reverse throttle for 2 sec.
+                            while time.clock() < initial + 2:
+                                Rover.throttle = -0.5
                                 Rover.brake = 0
                                 Rover.steer = 0
+                        #If stuck cycles not yet reached.
                         else:
                             Rover.throttle = Rover.throttle_set
                             Rover.brake = 0
                             Rover.steer = np.clip(np.mean(Rover.nav_angles * 180/np.pi), -15, 15)
-                    # Set throttle value to throttle setting
+                    #For setting the steer to zero when the rover is still in reverse.
+                    elif Rover.vel <= -0.1:
+                        #Restting stuck_cycle counter.
+                        stuck_cycles = 0
+                        Rover.throttle = Rover.throttle_set
+                        Rover.brake = 0
+                        Rover.steer = 0
                     else:
                         stuck_cycles = 0
                         Rover.throttle = Rover.throttle_set
