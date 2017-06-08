@@ -32,6 +32,16 @@ def find_obstacles(img, thresh = [160,160,160]):
     masked_img[mask] = 1
     return masked_img
 
+#Refining the find_obstacles function so that the black parts are replaced by the non-navigable parts,
+#not only in the displayed image but also in the world map.
+def ref_find_obstacles(img):
+    nav_path = find_nav_path(img)
+    rocks = find_rocks(img)
+    obstacles = find_obstacles(img)
+    mask = (nav_path == 0) & (rocks == 0) & (obstacles == 0)
+    obstacles[mask] = 1
+    return obstacles
+
 # Define a function to convert from image coords to rover coords
 def rover_coords(binary_img):
     # Identify nonzero pixels
@@ -114,7 +124,7 @@ def perception_step(Rover):
     warped = perspect_transform(img, source, destination)
     
     # 3) Apply color threshold to identify navigable terrain/obstacles/rock samples
-    obstacles_img = find_obstacles(warped)
+    obstacles_img = ref_find_obstacles(warped)
     rocks_img = find_rocks(warped)
     nav_path_img = find_nav_path(warped)
     
@@ -126,11 +136,13 @@ def perception_step(Rover):
     Rover.vision_image[:,:,1] = rocks_img*255
     Rover.vision_image[:,:,2] = nav_path_img*255
     
+    #This next piece encloses in {} was not needed since the same change was made in the root function find_obstacles that was refined,
+    #as this only affected the picture and that would affect the map also.
 
-    #Creating a mask for the black space where where all three channels are 0.
-    mask = (Rover.vision_image[:,:,0] == 0) & (Rover.vision_image[:,:,1] == 0) & (Rover.vision_image[:,:,2] == 0)
+    #{ Creating a mask for the black space where where all three channels are 0.
+    #mask = (Rover.vision_image[:,:,0] == 0) & (Rover.vision_image[:,:,1] == 0) & (Rover.vision_image[:,:,2] == 0)
     #Masking the black space as non-navigable.
-    Rover.vision_image[:,:,0][mask] = 255
+    #Rover.vision_image[:,:,0][mask] = 255 }
 
     # 5) Convert map image pixel values to rover-centric coords
     obstacle_x, obstacle_y = rover_coords(obstacles_img)
