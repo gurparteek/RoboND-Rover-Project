@@ -55,7 +55,7 @@ def unstuck(Rover):
         initial = time.clock()
         #Reverse throttle for 1 sec.
         while time.clock() < initial + 1:
-            Rover.throttle = -0.5
+            Rover.throttle = -1.0
             Rover.brake = 0
             Rover.steer = 0
     # If stuck cycles not yet reached.
@@ -81,7 +81,7 @@ def decision_step(Rover):
 
                 if Rover.vel < Rover.max_vel:
                     # Setting condition for when the Rover gets stuck.
-                    if -0.1 < Rover.vel < 0.1 and Rover.throttle == 0.2:
+                    if -0.1 < Rover.vel < 0.1 and Rover.throttle == 1.0:
                         unstuck(Rover)
 
                     # For setting the steer to zero when the rover is still in reverse.
