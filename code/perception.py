@@ -125,6 +125,12 @@ def perception_step(Rover):
     Rover.vision_image[:,:,0] = obstacles_img*255
     Rover.vision_image[:,:,1] = rocks_img*255
     Rover.vision_image[:,:,2] = nav_path_img*255
+    
+
+    #Creating a mask for the black space where where all three channels are 0.
+    mask = (Rover.vision_image[:,:,0] == 0) & (Rover.vision_image[:,:,1] == 0) & (Rover.vision_image[:,:,2] == 0)
+    #Masking the black space as non-navigable.
+    Rover.vision_image[:,:,0][mask] = 255
 
     # 5) Convert map image pixel values to rover-centric coords
     obstacle_x, obstacle_y = rover_coords(obstacles_img)
