@@ -36,13 +36,13 @@ def brake(Rover):
     Rover.brake = Rover.brake_set
     Rover.steer = 0
 
-def turn(Rover):
+def turn(Rover,angle):
     #For turning to find a better path.
     Rover.throttle = 0
     # Release the brake to allow turning
     Rover.brake = 0
     # Turn range is +/- 15 degrees, when stopped the next line will induce 4-wheel turning
-    Rover.steer = 15 # Could be more clever here about which way to turn
+    Rover.steer = angle # Could be more clever here about which way to turn
 
 def unstuck(Rover):
     global stuck_cycles
@@ -115,7 +115,7 @@ def decision_step(Rover):
                 # Now we're stopped and we have vision data to see if there's a path forward
                 if len(Rover.nav_angles) < Rover.go_forward:
                     # Turning to find a better path.
-                    turn(Rover)
+                    turn(Rover,15)
 
                 # If we're stopped but see sufficient navigable terrain in front then go!
                 if len(Rover.nav_angles) >= Rover.go_forward:
