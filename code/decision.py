@@ -54,10 +54,8 @@ def unstuck(Rover):
     if stuck_cycles > 50:
         initial = time.clock()
         #Reverse throttle for 1 sec.
-        while time.clock() < initial + 1:
-            Rover.throttle = -1.0
-            Rover.brake = 0
-            Rover.steer = 0
+        while time.clock() < initial + 0.5:
+            turn(Rover,15)
     # If stuck cycles not yet reached.
     # This is for when the rover could not be stuck but starting from rest.
     else:
