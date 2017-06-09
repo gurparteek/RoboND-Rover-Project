@@ -106,7 +106,6 @@ def perspect_transform(img, src, dst):
 # Apply the above functions in succession and update the Rover state accordingly
 def perception_step(Rover):
     # Perform perception steps to update Rover()
-    # TODO: 
     # NOTE: camera image is coming to you in Rover.img
     img = Rover.img
 
@@ -129,20 +128,9 @@ def perception_step(Rover):
     nav_path_img = find_nav_path(warped)
     
     # 4) Update Rover.vision_image (this will be displayed on left side of screen)
-        # Example: Rover.vision_image[:,:,0] = obstacle color-thresholded binary image
-        #          Rover.vision_image[:,:,1] = rock_sample color-thresholded binary image
-        #          Rover.vision_image[:,:,2] = navigable terrain color-thresholded binary image
     Rover.vision_image[:,:,0] = obstacles_img*255
     Rover.vision_image[:,:,1] = rocks_img*255
     Rover.vision_image[:,:,2] = nav_path_img*255
-    
-    #This next piece encloses in {} was not needed since the same change was made in the root function find_obstacles that was refined,
-    #as this only affected the picture and that would affect the map also.
-
-    #{ Creating a mask for the black space where where all three channels are 0.
-    #mask = (Rover.vision_image[:,:,0] == 0) & (Rover.vision_image[:,:,1] == 0) & (Rover.vision_image[:,:,2] == 0)
-    #Masking the black space as non-navigable.
-    #Rover.vision_image[:,:,0][mask] = 255 }
 
     # 5) Convert map image pixel values to rover-centric coords
     obstacle_x, obstacle_y = rover_coords(obstacles_img)
@@ -161,9 +149,6 @@ def perception_step(Rover):
     nav_x_world, nav_y_world = pix_to_world(nav_x, nav_y, xpos, ypos, yaw, world_size, scale)
 
     # 7) Update Rover worldmap (to be displayed on right side of screen)
-        # Example: Rover.worldmap[obstacle_y_world, obstacle_x_world, 0] += 1
-        #          Rover.worldmap[rock_y_world, rock_x_world, 1] += 1
-        #          Rover.worldmap[navigable_y_world, navigable_x_world, 2] += 1
 
     #Adding condition to add data to worldmap only when the roll and pitch are near zero.
     if ((0 <= Rover.roll <= 1) or (359 <= Rover.roll <= 360)) and ((0 < Rover.pitch < 0.5) or (359.5 < Rover.pitch < 360)):
@@ -173,8 +158,6 @@ def perception_step(Rover):
 
     # 8) Convert rover-centric pixel positions to polar coordinates
     # Update Rover pixel distances and angles
-        # Rover.nav_dists = rover_centric_pixel_distances
-        # Rover.nav_angles = rover_centric_angles
     Rover.nav_dists, Rover.nav_angles = to_polar_coords(nav_x, nav_y)
     
     return Rover
